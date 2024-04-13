@@ -7,6 +7,14 @@
     <title>Tickets</title>
     <link rel="icon" href="{% static 'Tickets/favicon/logo_dnr_font.png' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,800;1,500;0,200;1,300&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,800;1,500&family=Tinos:wght@400;700&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="{% static 'Tickets/css/styles.css' %}">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="{% static 'Tickets/js/main.js' %}"></script>
@@ -53,14 +61,15 @@
                         <p>В ожидании</p>
                     </div>
                     <div class='text_tickets'>
-                        <p>Номер обращения #{{ ticket.id }}</p>
+                        <div class='number_request'>Номер обращения #{{ ticket.id }}</div>
                         <p>Дата: {{ ticket.date }}</p>
                         <p>Адрес магазина: {{ ticket.area }}, {{ ticket.district}}</p>
                         <p>Категория товара: {{ ticket.category }}</p>
                         <p>Название товара: {{ ticket.product_name }}</p>
-                        <p>Цена на ценнике: {{ ticket.price_tag }} ₽ за {{ ticket.gramms }}</p>
+                        <div class="price_list"><p>Цена на ценнике: {{ ticket.price_tag }} ₽ за {{ ticket.gramms }}</p>
                         <p>Цена за кг: {{ ticket.price_for_kg }} ₽</p>
-                        <p>Цена за кг в Ростовской области: {{ ticket.price_rost }} ₽</p>
+                        <p>Цена за кг в Ростовской области: {{ ticket.price_rost }}{% if ticket.price_rost != "товар не из меморандума" %} ₽{% endif %}</p>
+                        </div>
                     </div>
                     <div class="confirm-button">Подтвердить</div> 
                 </div>
