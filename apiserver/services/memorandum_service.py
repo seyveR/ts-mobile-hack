@@ -13,8 +13,9 @@ class Memorandum:
     def is_in_memorandum(self, product_name: str) -> str:
         for product in self.product_names:
             if product_name in product:
-                return product
-        return "Прочее"
+                if product != "Прочее":
+                    return product
+        return "нет категории"
     
     def get_price(self, product_name: str) -> Optional[float]:
         for name, price in zip(self.product_names, self.prices):

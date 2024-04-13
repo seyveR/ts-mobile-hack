@@ -10,7 +10,7 @@ class Model():
 
 
     @classmethod
-    def from_pretrained(cls, path: str = './apiserver/models/nlp_model'):
+    def from_pretrained(cls, path: str = './apiserver/models/last'):
         return cls(path)
 
 

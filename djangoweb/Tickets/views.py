@@ -23,10 +23,17 @@ class AddRecord(APIView):
     def post(self, request):
         print(request)
         print(request.data)
-        prod_name = request.data.get('prod_name')
-        prod_price = request.data.get('prod_price')
+
         date = request.data.get('date')
-        address = request.data.get('address')
+        description = request.data.get('description')
+        district = request.data.get('district')
+        area = request.data.get('area')
+        prod_name = request.data.get('prod_name')
+        category = request.data.get('category')
+        prod_price = request.data.get('prod_price')
+        gramms = request.data.get('gramms')
+        price_kg = request.data.get('price_kg')
+        price_rost = request.data.get('price_rost')
         rel = request.data.get('rel')
         # data = request.data.get('results')
 
@@ -36,14 +43,23 @@ class AddRecord(APIView):
             # date = timezone.datetime.strptime(date, '%Y-%m-%d').date()
         except ValueError:
             return Response({"error": "Invalid date or price format"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        if not price_rost:
+            price_rost = "товар не из меморандума"
 
         ticket = Ticket(
             date=date,
-            store_address=address,
+            description=description,
+            district=district,
+            area=area,
             product_name=prod_name,
-            price=prod_price,
+            category=category,
+            price_tag=prod_price,
+            gramms=gramms,
+            price_for_kg=price_kg,
+            price_rost=price_rost,
             social_relevance=rel
         )
         ticket.save()
 
-        return Response({"message": f"Record {prod_name}, {prod_price}, {date}, {address}, {rel}  added successfully"}, status=status.HTTP_200_OK)
+        return Response({"message": f"Record {prod_name}, {prod_price}, {date}, {district}, {rel}  added successfully"}, status=status.HTTP_200_OK)

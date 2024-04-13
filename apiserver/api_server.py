@@ -24,7 +24,8 @@ memoranum_control = Memorandum('Memorandum.csv')
 
 class PhotoData(BaseModel):
     photo_url: str
-    address: str 
+    area: str 
+    district: str 
     description: str 
 
 
@@ -49,9 +50,11 @@ def string_to_url(url: str) -> str:
 @app.post("/predict") 
 async def predict_photo(request: PhotoData):
     photo_url = request.photo_url
-    address = request.address
+    area = request.area
+    district = request.district
     description = request.description
-    print(address)
+    print(area)
+    print(district)
     print(description)
     if '%' not in photo_url:
         print('Use string_to_url')
@@ -87,6 +90,7 @@ async def predict_photo(request: PhotoData):
     name, gramms = results.get('name', None), results.get('gramms', None)
     print(name, gramms)
 
+    
     # Отдаем полученное имя товара на bert
     category = None
     if name:
@@ -106,25 +110,28 @@ async def predict_photo(request: PhotoData):
     # category = memoranum_control.is_in_memorandum(category)
     price_in_memorandum = memoranum_control.get_price(category)
     rubles_float = float(f'{rubles}.{copeicas}')
-    print(rubles_float)
-    print(price_in_memorandum)
+    print(f'Цена товара на фото: {rubles_float}')
+    print(f'Цена на категорию товара в меморандуме: {price_in_memorandum}')
+    print(f'Единица измерения веса: {weight_name}')
 
-    print(weight)
+    print(f'Вес товара на фото: {weight}')
     if weight_name == 'г' or weight_name == 'Г':
         multiplier = 1000 / weight
         weight_adjusted = weight * multiplier
         rubles_float_adjusted = rubles_float * multiplier
 
-        print(f"Adjusted rubles_float: {rubles_float_adjusted}")
+        print(f"Цена за кг веса: {rubles_float_adjusted}")
     elif weight_name == 'кг' or weight_name == 'КГ' or weight_name == 'Кг' or weight_name == 'кГ' or weight_name == 'Л' or weight_name == 'л':
         weight = weight*100
         multiplier = 1000 / weight
         weight_adjusted = weight * multiplier
         rubles_float_adjusted = rubles_float * multiplier
 
-        print(f"Adjusted rubles_float: {rubles_float_adjusted}")
+        print(f"Цена за кг веса: {rubles_float_adjusted}")
+    elif weight_name == '':
+        rubles_float_adjusted = rubles_float
     else:
-        print("Weight is less than 50, no adjustment needed.")
+        print("Неизвестная мера величины")
 
     if price_in_memorandum is not None:
         if rubles_float_adjusted <= price_in_memorandum:
@@ -136,10 +143,16 @@ async def predict_photo(request: PhotoData):
 
     # Формируем запрос для записи в базу
     data = {
-        "prod_name": name,
-        'prod_price': rubles_float,
         'date': date,
-        'address': address,
+        'description': description,
+        'district': district,
+        'area': area,
+        'prod_name': name,
+        'category': category,
+        'prod_price': rubles_float,
+        'gramms': str(f'{weight}{weight_name}'),
+        'price_kg': rubles_float_adjusted,
+        'price_rost': price_in_memorandum,
         'rel': rel
     }
 
@@ -151,6 +164,9 @@ async def predict_photo(request: PhotoData):
 
 
 def get_weight(string_weight: str) -> int:
+    if string_weight is None:
+        string_weight = '1000'
+
     weight = []
     name = []
     for s in string_weight:

@@ -13,3 +13,4 @@ venv
 *.ipynb
 test.py
 apiserver/models/nlp_model/
+apiserver/models/last/

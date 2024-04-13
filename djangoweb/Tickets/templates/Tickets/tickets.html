@@ -55,9 +55,12 @@
                     <div class='text_tickets'>
                         <p>Номер обращения #{{ ticket.id }}</p>
                         <p>Дата: {{ ticket.date }}</p>
-                        <p>Адрес магазина: {{ ticket.store_address }}</p>
+                        <p>Адрес магазина: {{ ticket.area }}, {{ ticket.district}}</p>
+                        <p>Категория товара: {{ ticket.category }}</p>
                         <p>Название товара: {{ ticket.product_name }}</p>
-                        <p>Цена: {{ ticket.price }} ₽</p>
+                        <p>Цена на ценнике: {{ ticket.price_tag }} ₽ за {{ ticket.gramms }}</p>
+                        <p>Цена за кг: {{ ticket.price_for_kg }} ₽</p>
+                        <p>Цена за кг в Ростовской области: {{ ticket.price_rost }} ₽</p>
                     </div>
                     <div class="confirm-button">Подтвердить</div> 
                 </div>
