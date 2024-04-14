@@ -64,6 +64,13 @@
                     </div>
                     <div class='text_tickets'>
                         <div class='number_request'>Номер обращения #{{ ticket.id }}</div>
+                        <p style="color: {% if ticket.social_relevance %}#cf3f3f{% else %}#74c478{% endif %};">
+                            {% if ticket.social_relevance %} 
+                                Цена на товар завышена 
+                            {% else %} 
+                                Товар продается по социальной цене
+                            {% endif %}
+                        </p>
                         <p>Дата: {{ ticket.date }}</p>
                         <p>Район: {{ ticket.district }}</p>
                         <p>Адрес магазина: {{ ticket.area}}</p>
