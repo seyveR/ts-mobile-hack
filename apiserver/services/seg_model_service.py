@@ -37,7 +37,7 @@ class Model():
                 
                 # fix bgr to rgb
                 input_image = Image.fromarray(result.orig_img[:, :, ::-1]) 
-                x, y, x2, y2 = self._get_padding(x, y, x2, y2, result.orig_shape)
+                x, y, x2, y2 = self._get_padding(x, y, x2, y2, result.orig_shape, padding=250)
                 license_plate = input_image.crop((x, y, x2, y2))
 
                 plate_filename = f'CropedImage.jpg'

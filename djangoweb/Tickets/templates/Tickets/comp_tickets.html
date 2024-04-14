@@ -1,10 +1,90 @@
-{% extends "Tickets/tickets.html" %}
 {% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tickets</title>
+    <link rel="icon" href="{% static 'Tickets/favicon/logo_dnr_font.png' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
-{% block content%} 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,800;1,500;0,200;1,300&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,800;1,500&family=Tinos:wght@400;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="{% static 'Tickets/css/styles.css' %}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="{% static 'Tickets/js/main.js' %}"></script>
+    <style type="text/css">
+        body {
+            background-image: url("{% static 'Tickets/img/background.jpg' %}");
+            background-repeat: no-repeat;
+            background-size: 100%;
+            background-attachment: fixed;
+
+            
+        }
+
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="logo-site">
+            <img src="{% static 'Tickets/img/dnr.png' %}">
+            <div class="bottom-padding"></div> 
+        </div>
+        <a href="{% url 'tickets' %}" class="icon-link" id="tickets-link">
+            <div class="icon-square">
+                <img data-original-src="{% static 'Tickets/img/icon_request_black.png' %}" data-active-src="{% static 'Tickets/img/icon_request_white.png' %}" src="{% static 'Tickets/img/icon_request_black.png' %}" alt="Запрос">
+            </div>
+            Запрос
+        </a>
+        <a href="{% url 'c_tickets' %}" class="icon-link" id="c-tickets-link">
+            <div class="icon-square">
+                <img data-original-src="{% static 'Tickets/img/icon_history_black.png' %}" data-active-src="{% static 'Tickets/img/icon_history_white.png' %}" src="{% static 'Tickets/img/icon_history_black.png' %}" alt="История">
+            </div>
+            История
+        </a>
+    </aside>
+
+    <main>
+        {% block content %}
+        <div class="cards">
+            {% for hist in history %}
+            <div class="row">
+                <div class="card_tickets">
+                    <div class="text-square_card_hist">
+                        <p>Завершено</p>
+                    </div>
+                    <div class='text_tickets'>
+                        <div class='number_request'>Номер обращения #{{ hist.ids }}</div>
+                        <p>Дата: {{ hist.date }}</p>
+                        <p>Район: {{ hist.district }}</p>
+                        <p>Адрес магазина: {{ hist.area}}</p>
+                        <p>Категория товара: {{ hist.category }}</p>
+                        <p>Название товара: {{ hist.product_name }}</p>
+                        <div class="price_list"><p>Стоимость на ценнике: {{ hist.price_tag }} ₽ за {{ hist.gramms }}</p>
+                        <p>Стоимость за кг: {{ hist.price_for_kg }} ₽</p>
+                        <p>Стоимость за кг в Ростовской области: {{ hist.price_rost }}{% if hist.price_rost != "товар не из меморандума" %} ₽{% endif %}</p>
+                        </div>
+                    </div>      
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        {% endblock %}    
+    </main>
 
 
-sdasd
+    
+</body>
 
 
-{% endblock %}
+
+</html>
+

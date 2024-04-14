@@ -56,6 +56,8 @@
         <div class="cards">
             {% for ticket in tickets %}
             <div class="row">
+                <form action="" method="post">
+                    {% csrf_token %}
                 <div class="card_tickets">
                     <div class="text-square_card">
                         <p>В ожидании</p>
@@ -63,15 +65,18 @@
                     <div class='text_tickets'>
                         <div class='number_request'>Номер обращения #{{ ticket.id }}</div>
                         <p>Дата: {{ ticket.date }}</p>
-                        <p>Адрес магазина: {{ ticket.area }}, {{ ticket.district}}</p>
+                        <p>Район: {{ ticket.district }}</p>
+                        <p>Адрес магазина: {{ ticket.area}}</p>
                         <p>Категория товара: {{ ticket.category }}</p>
                         <p>Название товара: {{ ticket.product_name }}</p>
-                        <div class="price_list"><p>Цена на ценнике: {{ ticket.price_tag }} ₽ за {{ ticket.gramms }}</p>
-                        <p>Цена за кг: {{ ticket.price_for_kg }} ₽</p>
-                        <p>Цена за кг в Ростовской области: {{ ticket.price_rost }}{% if ticket.price_rost != "товар не из меморандума" %} ₽{% endif %}</p>
+                        <div class="price_list"><p>Стоимость на ценнике: {{ ticket.price_tag }} ₽ за {{ ticket.gramms }}</p>
+                        <p>Стоимость за кг: {{ ticket.price_for_kg }} ₽</p>
+                        <p>Стоимость за кг в Ростовской области: {{ ticket.price_rost }}{% if ticket.price_rost != "товар не из меморандума" %} ₽{% endif %}</p>
                         </div>
                     </div>
-                    <div class="confirm-button">Подтвердить</div> 
+                    <input type="hidden" name="ticket_id" value="{{ ticket.id }}">
+                    <button type="submit" class="confirm-button">Подтвердить</button>
+                </form>
                 </div>
             </div>
             {% endfor %}

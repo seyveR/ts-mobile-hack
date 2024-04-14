@@ -93,7 +93,7 @@ body {
     border-radius: 25px;
     font-size: 12px;
     padding: 35px;
-    width: 100%; 
+    width: 1000px; 
     display: block;
     margin-bottom: 10px; 
     margin-right: auto;
@@ -101,12 +101,12 @@ body {
     background-color: rgba(5, 11, 38, 0.4);
     white-space: nowrap; 
     position: relative;
+    max-width: 1500px;
+    
 
    
     padding-right: 30px;
 }
-
-
 
 
 
@@ -117,6 +117,19 @@ body {
     background-color: #cf3f3f;
     color: white;
     border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+
+}
+
+.text-square_card_hist {
+    position: relative;
+    display: inline-block;
+    padding: 1px 14px;
+    background-color: #74c478;
+    color: white;
+    font-size: 16px;
+    border-radius: 22px;
     cursor: pointer;
     font-weight: bold;
 

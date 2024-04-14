@@ -40,7 +40,7 @@ class Model():
                 text = None
                 image = result.orig_img.copy()
                 cropped_image = image[y:y2, x:x2]
-                text = reader_price.readtext(cropped_image, detail=0)
+                text = reader_price.readtext(cropped_image, detail=0, link_threshold=0.05)
 
                 if names[cls] not in text_results or len(text) > 0 and len(text_results[names[cls]]) == 0:
                     text_results[names[cls]] = text

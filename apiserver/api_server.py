@@ -7,6 +7,8 @@ from urllib.parse import urlparse, quote
 import numpy as np
 from datetime import datetime, timezone
 from decimal import Decimal
+import pytz
+import re
 
 from .services.seg_model_service import Model as Seg_Model
 from .services.price_detect_model_service import Model as DetectPrice_Model
@@ -100,11 +102,20 @@ async def predict_photo(request: PhotoData):
         else:
             category = nlp_model.predict(name)
         category = memoranum_control.is_in_memorandum(category)
+    else:
+        category = 'На фотографии не удалось определить название, пожалуйста, сфотографируйте ценник еще раз'
+    
 
-    weight, weight_name = get_weight(gramms)
-    print('weight', weight, weight_name)
-    date_now = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S")
+    weight, unit = get_weight(gramms)
+    print('weight', weight, unit)
+
+
+    print(f'Категория: {category}')
+    
+    moscow_tz = pytz.timezone('Europe/Moscow')
+    date_now = datetime.now(moscow_tz).strftime("%Y-%m-%d %H:%M:%S")
     date = str(date_now)
+    print(date_now)
 
     rel = 0
     # category = memoranum_control.is_in_memorandum(category)
@@ -112,23 +123,23 @@ async def predict_photo(request: PhotoData):
     rubles_float = float(f'{rubles}.{copeicas}')
     print(f'Цена товара на фото: {rubles_float}')
     print(f'Цена на категорию товара в меморандуме: {price_in_memorandum}')
-    print(f'Единица измерения веса: {weight_name}')
+    print(f'Единица измерения веса: {unit}')
 
     print(f'Вес товара на фото: {weight}')
-    if weight_name == 'г' or weight_name == 'Г':
+    if unit.lower() == 'г'  or unit.lower() == 'мл':
         multiplier = 1000 / weight
         weight_adjusted = weight * multiplier
         rubles_float_adjusted = rubles_float * multiplier
 
         print(f"Цена за кг веса: {rubles_float_adjusted}")
-    elif weight_name == 'кг' or weight_name == 'КГ' or weight_name == 'Кг' or weight_name == 'кГ' or weight_name == 'Л' or weight_name == 'л':
-        weight = weight*100
-        multiplier = 1000 / weight
-        weight_adjusted = weight * multiplier
+    elif unit.lower() == 'кг' or unit.lower() == 'л':
+        weight_gr = weight*1000
+        multiplier = 1000 / weight_gr
+        weight_adjusted = weight_gr * multiplier
         rubles_float_adjusted = rubles_float * multiplier
 
         print(f"Цена за кг веса: {rubles_float_adjusted}")
-    elif weight_name == '':
+    elif unit == '':
         rubles_float_adjusted = rubles_float
     else:
         print("Неизвестная мера величины")
@@ -150,32 +161,39 @@ async def predict_photo(request: PhotoData):
         'prod_name': name,
         'category': category,
         'prod_price': rubles_float,
-        'gramms': str(f'{weight}{weight_name}'),
+        'gramms': str(f'{weight}{unit}'),
         'price_kg': rubles_float_adjusted,
         'price_rost': price_in_memorandum,
         'rel': rel
     }
 
-    responce = requests.post('http://localhost:8080/add_record/', json=data)
+    if name:
+        print('отправляю запрос')
+        responce = requests.post('http://localhost:8080/add_record/', json=data)
+    elif name and gramms == None:
+        return {"category": 'На фотографии не удалось определить граммовку, пожалуйста, сфотографируйте ценник повторно'}
 
-
-    # Responce {резульат if in memorandum else ты дурак}
     return {"category": category}
 
 
-def get_weight(string_weight: str) -> int:
+def get_weight(string_weight: str) -> tuple[int, str]:
+    pattern = re.compile(r'(\d+(?:[.,]\d+)?)\s*([A-zА-я]+)?')
     if string_weight is None:
-        string_weight = '1000'
+        string_weight = '1000 г'
 
-    weight = []
-    name = []
-    for s in string_weight:
-        if s.isdigit():
-            weight.append(s)
-        elif s == 'О' or s == 'о':
-            weight.append('0')
-        elif s == 'З' or s == 'з':
-            weight.append('3')
-        else:
-            name.append(s)
-    return (int(''.join(weight)), ''.join(name))
+    string_weight = string_weight.lower().replace('з', '3').replace('о', '0').replace('o', '0')
+
+    match = pattern.match(string_weight)
+    if match:
+        amount, unit = match.groups()
+    else:
+        amount, unit = 1000, 'г'
+    
+    amount = float(amount.replace(',', '.'))
+    return amount, unit
+
+
+if __name__ == "__main__":
+    amount, unit = get_weight('4ООг')
+    print(amount, unit)
+    print(type(amount), type(unit))

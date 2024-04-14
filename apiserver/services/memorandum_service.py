@@ -15,7 +15,7 @@ class Memorandum:
             if product_name in product:
                 if product != "Прочее":
                     return product
-        return "нет категории"
+        return "Категории нет в меморандуме"
     
     def get_price(self, product_name: str) -> Optional[float]:
         for name, price in zip(self.product_names, self.prices):
