@@ -1,0 +1,4 @@
+cents
+gramms
+name
+rubles

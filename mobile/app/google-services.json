@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "621376700942",
+    "project_id": "hakaton-7c7d7",
+    "storage_bucket": "hakaton-7c7d7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:621376700942:android:572466ea3f0ae78cd2b25f",
+        "android_client_info": {
+          "package_name": "com.example.hakaton"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAHa4K_R7CYlzd7zeu6ZnQ_NsbFArOpEuE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
